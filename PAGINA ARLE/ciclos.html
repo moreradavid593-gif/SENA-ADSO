@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ciclos</title>
+<style>
+body{background:#020617;color:#fff;font-family:Arial;padding:40px}
+.box{max-width:900px;margin:auto;background:#0f172a;padding:30px;border-radius:20px}
+pre{background:#000;color:#22c55e;padding:15px;border-radius:10px}
+button{background:#22d3ee;border:none;padding:15px 30px;border-radius:30px}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h1>Ciclos en Java</h1>
+
+<p>
+Los ciclos permiten ejecutar un bloque de código varias veces.
+Se usan cuando necesitas repetir una acción sin escribir el mismo código muchas veces.
+</p>
+
+<h3>Ciclo FOR</h3>
+<pre>
+for(int i = 1; i <= 5; i++){
+  System.out.println(i);
+}
+</pre>
+<p>Se usa cuando sabes cuántas veces se repetirá.</p>
+
+<h3>Ciclo WHILE</h3>
+<pre>
+int i = 1;
+while(i <= 5){
+  System.out.println(i);
+  i++;
+}
+</pre>
+<p>Se usa cuando NO sabes cuántas repeticiones habrá.</p>
+
+<button onclick="location.href='eval-ciclos.html'">Ir a evaluación</button>
+</div>
+
+</body>
+</html>
