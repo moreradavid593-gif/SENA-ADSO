@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Inventario</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        min-height: 100vh;
+        padding: 40px;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: auto;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+    }
+
+    form {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+        justify-content: center;
+    }
+
+    input {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        width: 200px;
+        transition: 0.3s;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 5px rgba(102,126,234,0.5);
+    }
+
+    button {
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .btn-primary {
+        background-color: #667eea;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #5563d1;
+    }
+
+    .btn-edit {
+        background-color: #ffc107;
+        color: #333;
+    }
+
+    .btn-edit:hover {
+        background-color: #e0a800;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+
+    thead {
+        background-color: #667eea;
+        color: white;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: center;
+    }
+
+    tbody tr {
+        border-bottom: 1px solid #ddd;
+        transition: 0.3s;
+    }
+
+    tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .empty {
+        text-align: center;
+        padding: 20px;
+        color: #777;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container">
+    <h1>📦 Sistema de Inventario</h1>
+
+    <form id="productForm">
+        <input type="hidden" id="productId">
+        <input type="text" id="name" placeholder="Nombre del producto" required>
+        <input type="number" id="price" placeholder="Precio" required>
+        <input type="number" id="quantity" placeholder="Cantidad" required>
+        <button type="submit" class="btn-primary">Guardar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="productTable"></tbody>
+    </table>
+</div>
+
+<script>
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+const form = document.getElementById("productForm");
+const productTable = document.getElementById("productTable");
+
+function saveToLocalStorage() {
+    localStorage.setItem("products", JSON.stringify(products));
+}
+
+function renderProducts() {
+    productTable.innerHTML = "";
+
+    if (products.length === 0) {
+        productTable.innerHTML = `<tr><td colspan="4" class="empty">No hay productos en el inventario</td></tr>`;
+        return;
+    }
+
+    products.forEach((product, index) => {
+        productTable.innerHTML += `
+            <tr>
+                <td>${product.name}</td>
+                <td>$${product.price}</td>
+                <td>${product.quantity}</td>
+                <td>
+                    <button class="btn-edit" onclick="editProduct(${index})">Editar</button>
+                    <button class="btn-delete" onclick="deleteProduct(${index})">Eliminar</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const id = document.getElementById("productId").value;
+    const name = document.getElementById("name").value;
+    const price = document.getElementById("price").value;
+    const quantity = document.getElementById("quantity").value;
+
+    if (id === "") {
+        products.push({ name, price, quantity });
+    } else {
+        products[id] = { name, price, quantity };
+    }
+
+    saveToLocalStorage();
+    renderProducts();
+    form.reset();
+    document.getElementById("productId").value = "";
+});
+
+function editProduct(index) {
+    const product = products[index];
+    document.getElementById("productId").value = index;
+    document.getElementById("name").value = product.name;
+    document.getElementById("price").value = product.price;
+    document.getElementById("quantity").value = product.quantity;
+}
+
+function deleteProduct(index) {
+    if (confirm("¿Seguro que deseas eliminar este producto?")) {
+        products.splice(index, 1);
+        saveToLocalStorage();
+        renderProducts();
+    }
+}
+
+renderProducts();
+</script>
+
+</body>
+</html>
